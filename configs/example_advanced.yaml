@@ -1,0 +1,127 @@
+models:
+  defaults:
+    economist: "x-ai/grok-4.20"
+    historian: "x-ai/grok-4.1-fast"
+    strategist: "openai/gpt-5-mini"
+  fallbacks:
+    "x-ai/grok-4.20": "anthropic/claude-haiku-4.5"
+    "x-ai/grok-4.1-fast": "openai/gpt-5.4-nano"
+    "openai/gpt-5-mini": "anthropic/claude-haiku-4.5"
+  temperatures:
+    economist: 0.6
+    historian: 0.4
+    strategist: 0.9
+  max_tokens:
+    economist: 3072
+    historian: 3072
+    strategist: 2048
+  top_p:
+    economist: 0.95
+    historian: 0.85
+    strategist: 0.95
+
+teams:
+  count: 3
+  list:
+    - id: team_a
+      name: "Nuclear Advocates"
+      side: "for"
+      position_description: "Argue that nuclear baseload power is required for grid stability and long-term decarbonization."
+      agents:
+        - id: "economist_a"
+          role: "economist"
+        - id: "historian_a"
+          role: "historian"
+          model: "x-ai/grok-4.20"
+        - id: "strategist_a"
+          role: "strategist"
+    - id: team_b
+      name: "Renewable Prioritizers"
+      side: "against"
+      position_description: "Argue that nuclear expansion is too slow and costly compared with modern renewable deployments."
+      agents:
+        - id: "economist_b"
+          role: "economist"
+        - id: "historian_b"
+          role: "historian"
+        - id: "strategist_b"
+          role: "strategist"
+    - id: team_c
+      name: "Grid Pragmatists"
+      side: "for"
+      position_description: "Support a constrained nuclear role with strict financial and deployment safeguards."
+      agents:
+        - id: "economist_c"
+          role: "economist"
+        - id: "historian_c"
+          role: "historian"
+        - id: "strategist_c"
+          role: "strategist"
+
+rounds:
+  count: 2
+  sequence:
+    - opening
+    - steelman
+    - rebuttal
+    - cross_examination
+    - fact_check
+    - position_swap
+    - closing
+  timeouts:
+    opening: 90s
+    steelman: 90s
+    rebuttal: 90s
+    cross_examination: 120s
+    fact_check: 90s
+    position_swap: 120s
+    closing: 90s
+
+judges:
+  types:
+    - logic
+    - evidence
+    - clarity
+    - adversarial
+  models:
+    logic: "x-ai/grok-4.20"
+    evidence: "openai/gpt-5-mini"
+    clarity: "x-ai/grok-4.1-fast"
+    adversarial: "anthropic/claude-haiku-4.5"
+  fallbacks:
+    "x-ai/grok-4.20": "anthropic/claude-haiku-4.5"
+    "x-ai/grok-4.1-fast": "openai/gpt-5.4-nano"
+    "openai/gpt-5-mini": "anthropic/claude-haiku-4.5"
+    "anthropic/claude-haiku-4.5": "openai/gpt-5.4-nano"
+  temperatures:
+    logic: 0.1
+    evidence: 0.1
+    clarity: 0.2
+    adversarial: 0.3
+  adversarial_config:
+    bias_threshold: 0.25
+    contradiction_penalty: 3.0
+
+output:
+  format: "json"
+  path: "./nuclear_debate_output"
+  transcript: true
+  terminal_display: true
+  streaming: true
+  stream_block_size: "sentence"
+
+api_client:
+  base_url: "https://openrouter.ai/api/v1"
+  api_key_env_var: "OPENROUTER_API_KEY"
+  timeout: 180s
+  max_retries: 3
+  retry_base_delay: 2s
+  rate_limit_rps: 8.0
+
+logging:
+  level: "info"
+  format: "json"
+
+session:
+  save_interval: 20s
+  checkpoint_min_interval: 2s

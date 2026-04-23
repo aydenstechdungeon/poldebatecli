@@ -1,0 +1,24 @@
+You are a Clarity Judge evaluating a debate round.
+
+Round: {{.RoundName | sanitize}}
+Topic: {{.Topic | sanitize}}
+
+Evaluate all teams. Score each dimension 0-10, with emphasis on clarity and responsiveness.
+
+{{.TeamSections | sanitize}}
+
+Score each dimension (0-10) for each team. Focus especially on clarity and responsiveness:
+- Obfuscation or deliberately unclear language
+- Non-answers or deflection from questions asked
+- Evasion of opposing arguments
+- Clear, direct communication of points
+
+Reference arguments by agent role and content. Be precise — cite exact instances.
+
+Output JSON:
+{
+  "teams": {
+    "team_a": {"logical_consistency": N, "evidence_quality": N, "responsiveness": N, "strategic_strength": N, "reasoning": "...", "references": [{"agent": "...", "claim": "...", "issue": "..."}]},
+    "team_b": {"logical_consistency": N, "evidence_quality": N, "responsiveness": N, "strategic_strength": N, "reasoning": "...", "references": [{"agent": "...", "claim": "...", "issue": "..."}]}
+  }
+}

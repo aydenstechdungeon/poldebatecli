@@ -1,0 +1,113 @@
+models:
+  defaults:
+    economist: "x-ai/grok-4.20"
+    historian: "x-ai/grok-4.1-fast"
+    strategist: "openai/gpt-5-mini"
+  fallbacks:
+    "x-ai/grok-4.20": "anthropic/claude-haiku-4.5"
+    "x-ai/grok-4.1-fast": "openai/gpt-5.4-nano"
+    "openai/gpt-5-mini": "anthropic/claude-haiku-4.5"
+  temperatures:
+    economist: 0.7
+    historian: 0.5
+    strategist: 0.8
+  max_tokens:
+    economist: 2048
+    historian: 2048
+    strategist: 2048
+  top_p:
+    economist: 0.95
+    historian: 0.90
+    strategist: 0.95
+
+teams:
+  team_a:
+    name: "Proponents"
+    side: "for"
+    position_description: "Affirm the proposition with practical, evidence-backed policy and implementation arguments."
+    agents:
+      - id: "economist_a"
+        role: "economist"
+      - id: "historian_a"
+        role: "historian"
+      - id: "strategist_a"
+        role: "strategist"
+  team_b:
+    name: "Opponents"
+    side: "against"
+    position_description: "Challenge the proposition by exposing risks, tradeoffs, and weaker assumptions."
+    agents:
+      - id: "economist_b"
+        role: "economist"
+      - id: "historian_b"
+        role: "historian"
+      - id: "strategist_b"
+        role: "strategist"
+
+rounds:
+  count: 1
+  sequence:
+    - opening
+    - steelman
+    - rebuttal
+    - cross_examination
+    - fact_check
+    - position_swap
+    - closing
+  timeouts:
+    opening: 60s
+    steelman: 60s
+    rebuttal: 60s
+    cross_examination: 90s
+    fact_check: 60s
+    position_swap: 90s
+    closing: 60s
+
+judges:
+  types:
+    - logic
+    - evidence
+    - clarity
+    - adversarial
+  models:
+    logic: "x-ai/grok-4.20"
+    evidence: "openai/gpt-5-mini"
+    clarity: "x-ai/grok-4.1-fast"
+    adversarial: "anthropic/claude-haiku-4.5"
+  fallbacks:
+    "x-ai/grok-4.20": "anthropic/claude-haiku-4.5"
+    "x-ai/grok-4.1-fast": "openai/gpt-5.4-nano"
+    "openai/gpt-5-mini": "anthropic/claude-haiku-4.5"
+    "anthropic/claude-haiku-4.5": "openai/gpt-5.4-nano"
+  temperatures:
+    logic: 0.2
+    evidence: 0.2
+    clarity: 0.3
+    adversarial: 0.4
+  adversarial_config:
+    bias_threshold: 0.3
+    contradiction_penalty: 2.0
+
+output:
+  format: "json"
+  path: "./debate_output"
+  transcript: true
+  terminal_display: true
+  streaming: true
+  stream_block_size: "sentence"
+
+api_client:
+  base_url: "https://openrouter.ai/api/v1"
+  api_key_env_var: "OPENROUTER_API_KEY"
+  timeout: 120s
+  max_retries: 3
+  retry_base_delay: 2s
+  rate_limit_rps: 10.0
+
+logging:
+  level: "info"
+  format: "json"
+
+session:
+  save_interval: 30s
+  checkpoint_min_interval: 3s

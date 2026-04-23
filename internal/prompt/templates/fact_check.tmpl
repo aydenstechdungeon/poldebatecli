@@ -1,0 +1,11 @@
+{{template "system.tmpl" .}}
+
+CLAIMS RAISED IN PRIOR ROUNDS:
+{{range .FactCheckData}}
+- {{. | sanitize}}
+{{end}}
+
+Verify these claims. Do they support or undermine your position?
+You must: (1) acknowledge facts that contradict your stance, (2) explain how
+they fit or don't fit your framework, (3) update your argument if necessary.
+Honest engagement with contradictory evidence is scored positively.
